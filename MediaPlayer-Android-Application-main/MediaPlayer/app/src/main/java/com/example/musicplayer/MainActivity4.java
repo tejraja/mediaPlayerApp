@@ -1,5 +1,5 @@
-package com.example.musicplayer;  //Play Video
-
+// Import necessary packages for the Video Player activity
+package com.example.musicplayer;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.media.MediaPlayer;
@@ -10,40 +10,44 @@ import android.widget.MediaController;
 import android.widget.VideoView;
 import java.util.ArrayList;
 
-public class MainActivity4 extends AppCompatActivity implements MediaPlayer.OnCompletionListener{
+// Define the MainActivity4 class extending AppCompatActivity
+public class MainActivity4 extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
 
+    // Declare UI elements and variables
     VideoView vw;
     ArrayList<Integer> videolist = new ArrayList<>();
     int currvideo = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Set the content view to the layout defined in activity_main4.xml
         setContentView(R.layout.activity_main4);
-        vw = (VideoView)findViewById(R.id.vidvw);
+
+        // Find reference to VideoView in the layout
+        vw = findViewById(R.id.vidvw);
         vw.setMediaController(new MediaController(this));
         vw.setOnCompletionListener(this);
 
-        // video name should be in lower case alphabet.
+        // Add video resources to the videolist
         videolist.add(R.raw.video_one);
         videolist.add(R.raw.video_two);
         videolist.add(R.raw.video_three);
+        // Set the first video in the list to play
         setVideo(videolist.get(0));
-
-
-
     }
-    public void setVideo(int id)
-    {
-        String uriPath
-                = "android.resource://"
-                + getPackageName() + "/" + id;
+
+    // Method to set the video source and start playing
+    public void setVideo(int id) {
+        String uriPath = "android.resource://" + getPackageName() + "/" + id;
         Uri uri = Uri.parse(uriPath);
         vw.setVideoURI(uri);
         vw.start();
     }
 
-    public void onCompletion(MediaPlayer mediapalyer)
-    {
+    // Method called when video playback is completed
+    public void onCompletion(MediaPlayer mediaPlayer) {
+        // Create an AlertDialog to ask if the user wants to replay or play the next video
         AlertDialog.Builder obj = new AlertDialog.Builder(this);
         obj.setTitle("Playback Finished!");
         obj.setIcon(R.mipmap.ic_launcher);
@@ -54,13 +58,15 @@ public class MainActivity4 extends AppCompatActivity implements MediaPlayer.OnCo
         obj.show();
     }
 
+    // Inner class to handle AlertDialog button clicks
     class MyListener implements DialogInterface.OnClickListener {
-        public void onClick(DialogInterface dialog, int which)
-        {
-            if (which == -1) {
+        public void onClick(DialogInterface dialog, int which) {
+            // If "Replay" is clicked, replay the current video
+            if (which == DialogInterface.BUTTON_POSITIVE) {
                 vw.seekTo(0);
                 vw.start();
             }
+            // If "Next" is clicked, play the next video in the list
             else {
                 ++currvideo;
                 if (currvideo == videolist.size())
